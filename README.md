@@ -1,9 +1,9 @@
 OSC: Operator Splitting for Control
 ===========================================================
-based on: A Splitting Method for Optimal Control
-
-by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd [available
-here](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html):
+based on:  
+A Splitting Method for Optimal Control  
+by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd  
+[available here](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html):
 
 ===========================================================
 Quickstart:
