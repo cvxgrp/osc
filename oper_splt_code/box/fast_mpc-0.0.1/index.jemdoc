@@ -1,0 +1,189 @@
+# jemdoc: title{fast_mpc: code for fast model predictive control}
+= +fast_mpc+: code for fast model predictive control
+
+Version Alpha (Sep 2008)\n
+[http://www.stanford.edu/~yw224 Yang Wang] and
+[http://www.stanford.edu/~boyd Stephen Boyd]
+
+== Purpose
++fast_mpc+ contains two C functions, with MATLAB mex interface,
+that implement the fast model predictive control methods described in the
+paper
+[http://stanford.edu/~boyd/papers/fast_mpc.html /Fast Model Predictive 
+Control Using Online Optimization/].  See this paper for the precise
+problem formulation and meanings of the algorithm parameters.
+
+== Download and install
+Get and unpack the package files from either of 
+
+- [fast_mpc-0.0.1.tar.gz]
+- [fast_mpc-0.0.1.zip]
+
+This will create a directory that contains all source, as well as
+this documentation.
+
+See the file [INSTALL INSTALL] for installation instructions.
+
+== What +fast_mpc+ does
+We consider the control of a time-invariant linear dynamical system
+\(
+x(t+1) = Ax(t)+Bu(t)+w(t),\quad t=0,1,\ldots,
+\)
+where $x(t)$, $u(t)$, and $w(t)$ are the state, input, and disturbance
+at time $t$, and $A$ and $B$ are the dynamics and input matrices.
+
+In model predictive control (MPC), at each time $t$ we solve the QP
+\(
+\begin{array}{ll}
+\mbox{minimize} & x(t+T)^TQ_fx(t+T) +\displaystyle\sum_{\tau = 0}^{t+T-1} x(\tau)^TQx(\tau)+u(\tau)^TRu(\tau) \\
+\mbox{subject to} & x_{\mbox{\scriptsize min}} \leq x(\tau) \leq
+x_{\mbox{\scriptsize max}}, \quad \tau = t+1,\ldots,t+T, \\
+& u_{\mbox{\scriptsize min}} \leq u(\tau) \leq u_{\mbox{\scriptsize max}}, \quad \tau= t,\ldots,t+T-1, \\
+& x(\tau+1) = Ax(\tau) + Bu(\tau),\quad \tau = t,\ldots,t+T-1,
+\end{array}
+\)
+with variables
+\(
+x(t+1),\ldots,x(t+T),\quad u(t),\ldots,u(t+T-1),
+\)
+and data
+\(
+x(t),A,B,Q,Q_f,R,x_{\mbox{\scriptsize min}},x_{\mbox{\scriptsize max}},
+u_{\mbox{\scriptsize min}},u_{\mbox{\scriptsize max}},T.
+\)
+The MPC input is $u^\star(t)$. We repeat this at the next time step.
+
++fast_mpc+ is a software package for solving this optimization problem
+fast by exploiting its special structure, and by solving the problem 
+approximately.
+The function +fmpc_step+ solves the problem above, starting from a given
+initial state and input trajectory.
+The function +fmpc_sim+ carries out a full MPC simulation of a dynamical
+system with MPC control.
+
+== Using +fmpc_step+
+The function +fmpc_step+ solves the above optimization problem and returns the
+approximately optimal $x$ and $u$ trajectories.  (In this case, you must 
+implement the MPC control loop yourself.)   The calling procedure is as
+follows.
+~~~
+{}{}
+[X,U,telapsed] = fmpc_step(sys,params,X0,U0,x0);
+~~~
+~~~
+{Inputs}{}
+System description (sys structure):
+
+    sys.A       :   dynamics matrix A
+    sys.B       :   input matrix B
+    sys.Q       :   state cost matrix Q
+    sys.R       :   input cost matrix R
+    sys.xmax    :   state upper limits x_{max}
+    sys.xmin    :   state lower limits x_{min}
+    sys.umax    :   input upper limits u_{max}
+    sys.umin    :   input lower limits u_{min}
+    sys.n       :   number of states
+    sys.m       :   number of inputs
+
+MPC parameters (params structure):
+
+    params.T        :   MPC horizon T
+    params.Qf       :   MPC final cost Q_f
+    params.kappa    :   Barrier parameter
+    params.niters   :   number of newton iterations
+    params.quiet    :   no output to display if true
+
+Other inputs
+    X0   :   warm start X trajectory (n by T matrix)
+    U0   :   warm start U trajectory (m by T matrix)
+    x0   :   initial state 
+    
+The inputs X0 and U0 need not satisfy the constraints; they are first
+projected into the bounding box before the fast algorithm is applied.
+~~~
+
+~~~
+{Outputs}{}
+X        :  optimal X trajectory (n by T matrix)
+U        :  optimal U trajectory (m by T matrix)
+telapsed :  time taken to solve the problem
+~~~
+
+== Using +fmpc_sim+
+The function +fmpc_sim+ handles the entire MPC simulation.
+For $t=1,\ldots, n_\mathrm{steps}$,
++fmpc_sim+ solves the above optimization problem, then applies the MPC input 
+and updates the state according to the dynamics equations. 
+The state and control trajectories are initialized with those from the
+previous step, shifted in time, and
+appending $\hat u$ and $\hat x$, where
+\(
+\hat u = Kx(T) , \qquad
+\hat x = Ax(T)+BKx(T).
+\)
+(As with +fmpc_step+, these trajectories are then projected into the
+constraint box.)
+Here $K$ is the terminal control gain,
+\(
+K = -(R+B^TQ_fB)^{-1}B^TQ_fA.
+\)
+The calling procedure is
+~~~
+{}{}
+[Xhist,Uhist,telapsed] = fmpc_sim(sys,params,X0,U0,x0,w);
+~~~
+~~~
+{Inputs}{}
+System description (sys structure):
+
+    sys.A       :   dynamics matrix A
+    sys.B       :   input matrix B
+    sys.Q       :   state cost matrix Q
+    sys.R       :   input cost matrix R
+    sys.xmax    :   state upper limits x_{max}
+    sys.xmin    :   state lower limits x_{min}
+    sys.umax    :   input upper limits u_{max}
+    sys.umin    :   input lower limits u_{min}
+    sys.n       :   number of states
+    sys.m       :   number of inputs
+
+MPC parameters (params structure):
+
+    params.T        :   MPC horizon T
+    params.Qf       :   MPC final cost Q_f
+    params.kappa    :   Barrier parameter
+    params.niters   :   number of newton iterations
+    params.quiet    :   no output to display if true
+    params.nsteps   :   number of steps to run the MPC simulation
+
+Other inputs
+    X0   :   warm start X trajectory (n by T matrix)
+    U0   :   warm start U trajectory (m by T matrix)
+    x0   :   initial state 
+    w    :   disturbance trajectory (n by nsteps matrix)
+
+The inputs X0 and U0 need not satisfy the constraints; they are first
+projected into the bounding box before the fast algorithm is applied.
+~~~
+
+~~~
+{Outputs}{}
+Xhist        :  state history (n by nsteps matrix)
+Uhist        :  input history (m by nsteps matrix)
+telapsed     :  time taken to solve the problem
+~~~
+
+== Examples
+We have provided two examples that illustrate usage:
+
+- [masses_example.m +masses_example.m+] 
+uses +fmpc_step+ to control a system of oscillating masses.
+- [randsys_example.m +randsys_example.m+] uses +fmpc_sim+ to simulate
+MPC on a randomly generated system.
+
+== Feedback
+Please report any bugs to Yang Wang [yw224@stanford.edu
+<yw224@stanford.edu>]. 
+
+== 
+[http://www.stanford.edu/~boyd/research.html Boyd's research group page.]

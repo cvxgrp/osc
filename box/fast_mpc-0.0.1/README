@@ -1,0 +1,21 @@
+
+source code for: Fast Model Predictive Control Using Online Optimization
+
+Copyright (C) 2008  Yang Wang and Stephen Boyd
+------------------------------------------------------------------------
+
+Thank you for downloading the fast_mpc source code!
+
+Please refer to the file 'INSTALL' for information on how to compile
+fast_mpc. If you have already compiled the source code, refer to the
+file 'doc/index.html' on how to use the fmpc_sim and fmpc_step functions.
+
+Files:
+    
+    fmpc_sim.c          : C-mex source code for fast_mpc simulator
+    fmpc_step.c         : C-mex source code for computing one step of fast_mpc
+    masses_example.m    : oscillating masses control example using fmpc_step
+    randsys_example.m   : random system control example using fmpc_sim
+    lapack.h            : LAPACK header file
+    blas.h              : BLAS header file
+
