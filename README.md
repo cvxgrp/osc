@@ -135,13 +135,13 @@ it should contain all data required to perform the prox step
 prox.c and prox.h are problem specific but they must conform
 to the following requirements:
 
-    prox.h:
-contain definition of prox_data struct, used in main file
-this should contain all fixed data that the prox function
-requires to perform the prox step
+* prox.h:
+  - contain definition of prox_data struct, used in main file
+  - this should contain all fixed data that the prox function
+  requires to perform the prox step
 
-    prox.c:
-functions to read in the prox data into prox_data struct  
-functions to perform the prox step  
-functions to perturb the data (for warm-start)  
-functions to free memory associated with prox data  
+* prox.c:
+  - functions to read in the prox data into prox_data struct  
+  - functions to perform the prox step  
+  - functions to perturb the data (for warm-start)  
+  - functions to free memory associated with prox data  
