@@ -1,13 +1,12 @@
 OSC: Operator Splitting for Control
 ===========================================================
 based on:  
-A Splitting Method for Optimal Control  
+[A Splitting Method for Optimal Control](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html)  
 by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd  
-[available here](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html):
 
 ===========================================================
 Quickstart:
-to compile all the simulations: in this directory type:
+to compile all the simulations, in this directory type:
 
     make
 
@@ -21,53 +20,53 @@ or
     cd box
     ./warm_start.out
 
-osc.out runs the algorithm from a cold-start just once
+osc.out runs the algorithm from a cold-start just once  
 warm_start.out performs NUM_WARM warm-start simulations
 
-to remove compiled objects and binaries type 
+to remove compiled objects and binaries type  
 in oper_splt_code/ directory:
 
     make clean
 
 ==========================================================
-the code fore examples presented in the paper are in 
+the code fore examples presented in the paper are in  
 the following directories:
 
-box/ : box constrained quadratic optimal control
-finance/ : multi-period portfolio optimization
-rob_est/ : robust state estimation
-sup_ch/ : supply chain management
+box/ : box constrained quadratic optimal control  
+finance/ : multi-period portfolio optimization  
+rob_est/ : robust state estimation  
+sup_ch/ : supply chain management  
 
 ==========================================================
 the binaries can take additional arguments, e.g.:
 
     ./osc.out data_KKT data_prox
 
-the first argument must be the main data file (see below)
-the second argument must be the prox data file
+the first argument must be the main data file (see below)  
+the second argument must be the prox data file  
 
-if no arguments are supplied the binaries use the default
-data files: data_KKT data_prox
+if no arguments are supplied the binaries use the default  
+data files: data_KKT data_prox  
 
 ==========================================================
 This directory consists of the following files:
 
-osc.c, osc.h 
-			code to perform cold start OSC
-cholesky.c, cholesky.h
-			code required to perform the factorization and
-			solve steps	
-warm_start.c
-			code that performs the warm-start sumulations
-Makefile
+osc.c, osc.h:  
+			code to perform cold start OSC  
+cholesky.c, cholesky.h:  
+			code required to perform the factorization and  
+			solve steps	 
+warm_start.c: 
+            code that performs the warm-start sumulations  
+Makefile  
 README
 
 ==========================================================
 The oper_splt_code/ directory consists of the following subdirectories:
 
-AMD
-LDL
-UFconfig
+AMD  
+LDL  
+UFconfig  
 
 These contain routines written by Tim Davis et al., these
 are required to factorize the KKT matrix and solve the
