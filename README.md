@@ -1,11 +1,12 @@
 OSC: Operator Splitting for Control
 ===========================================================
 based on: A Splitting Method for Optimal Control
-by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd
-[available here](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html):
+by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd [available
+here](http://www.stanford.edu/~boyd/papers/oper_splt_ctrl.html):
+
 ===========================================================
 Quickstart:
-to compile all the simulations: in the oper_splt_code/ directory type:
+to compile all the simulations: in this directory type:
 
     make
 
@@ -26,14 +27,16 @@ to remove compiled objects and binaries type
 in oper_splt_code/ directory:
 
     make clean
+
 ==========================================================
 the code fore examples presented in the paper are in 
 the following directories:
 
-oper_splt_code/box/ : box constrained quadratic optimal control
-oper_splt_code/finance/ : multi-period portfolio optimization
-oper_splt_code/rob_est/ : robust state estimation
-oper_splt_code/sup_ch/ : supply chain management
+box/ : box constrained quadratic optimal control
+finance/ : multi-period portfolio optimization
+rob_est/ : robust state estimation
+sup_ch/ : supply chain management
+
 ==========================================================
 the binaries can take additional arguments, e.g.:
 
@@ -44,8 +47,9 @@ the second argument must be the prox data file
 
 if no arguments are supplied the binaries use the default
 data files: data_KKT data_prox
+
 ==========================================================
-The oper_splt_code/ directory consists of the following files:
+This directory consists of the following files:
 
 osc.c, osc.h 
 			code to perform cold start OSC
@@ -56,6 +60,7 @@ warm_start.c
 			code that performs the warm-start sumulations
 Makefile
 README
+
 ==========================================================
 The oper_splt_code/ directory consists of the following subdirectories:
 
@@ -77,6 +82,7 @@ sup_ch
 
 These are the directories that contain the examples as
 described in the paper.
+
 ==========================================================
 The example subdirectories consist of the following files:
 
@@ -101,6 +107,7 @@ cvxgen
 			contains the cvxgen code, for comparison purposes
 fast_mpc-0.0.1
 			contains the fast MPC code, for comparison purposes
+
 ==========================================================
 main data file : (default name: data_KKT)
 
@@ -112,6 +119,7 @@ supplied in column compressed format.
 
 prox data file (defualt name: data_prox) is problem specific
 it should contain all data required to perform the prox step
+
 ==========================================================
 prox.c and prox.h are problem specific but they must conform
 to the following requirements:
