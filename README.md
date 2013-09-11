@@ -8,9 +8,11 @@ by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd
 
 ===========================================================
 Solves:
+    
     minimize \sum_{t=0}^T \phi_t(x_t,u_t) + \psi_t(x_t,u_t) 
     subject to  x_{t+1} = A_t x_t + B_t u_t +c_t, t=0, ... , T-1
-over x_t, u_t t = 0, ... , T
+
+    over x_t, u_t t = 0, ... , T
 
 where phi_t terms are quadratic  
 and psi_t terms are arbitrary, supplied by the user in the form of a proximal operator
