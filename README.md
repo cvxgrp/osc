@@ -14,8 +14,8 @@ Solves:
 
     over x_t, u_t t = 0, ... , T
 
-where phi_t terms are quadratic  
-and psi_t terms are arbitrary, supplied by the user in the form of a proximal operator
+where `phi_t` terms are quadratic  
+and `psi_t` terms are arbitrary, supplied by the user in the form of a proximal operator
 
 Quickstart:
 to compile all the simulations, in this directory type:
@@ -145,3 +145,4 @@ functions to read in the prox data into prox_data struct
 functions to perform the prox step  
 functions to perturb the data (for warm-start)  
 functions to free memory associated with prox data  
+functions to free memory associated with prox data

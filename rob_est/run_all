@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo '**SMALL**'
+cp data/small/* data/
+./run_osc
+
+echo '**MEDIUM**'
+cp data/medium/* data/
+./run_osc
+
+echo '**LARGE**'
+cp data/large/* data/
+./run_osc

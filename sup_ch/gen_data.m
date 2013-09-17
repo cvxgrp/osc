@@ -70,13 +70,13 @@ end
 %%
 
 % code to plot graph:
-plot(position(1,1:n),position(2,1:n),'.');hold on
-plot(source_pos(1,:),source_pos(2,:),'gx','linewidth',3)
-plot(sink_pos(1,:),sink_pos(2,:),'rx','linewidth',3)
+%plot(position(1,1:n),position(2,1:n),'.');hold on
+%plot(source_pos(1,:),source_pos(2,:),'gx','linewidth',3)
+%plot(sink_pos(1,:),sink_pos(2,:),'rx','linewidth',3)
 
 [a,b,c] = find(edges);
 for i = 1:length(a)
-    plot([position(1,a(i)),position(1,b(i))],[position(2,a(i)),position(2,b(i))])%,'linewidth',0.01/c(i));
+    %plot([position(1,a(i)),position(1,b(i))],[position(2,a(i)),position(2,b(i))])%,'linewidth',0.01/c(i));
 end
 
 

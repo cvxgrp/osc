@@ -2,28 +2,17 @@
 # by Brendan O'Donoghue, George Stathopoulos and Stephen Boyd
 # ===========================================================
 
-# A simple makefile for managing build of project composed of C source files.
-#
 UNAME = $(shell uname -s)
-# It is likely that default C compiler is already gcc, but explicitly
-# set, just to be sure
 CC = gcc
 
-# The CFLAGS variable sets compile flags for gcc:
-#  -g          compile with debug information
-#  -Wall       give all diagnostic warnings
-#  -pedantic   require compliance with ANSI standard
-#  -O0         do not optimize generated code
-#  -std=gnu99  use the Gnu C99 standard language definition
-#  -m32        emit code for IA32 architecture
-
 CFLAGS = -g -Wall -pedantic -O3 -fopenmp 
-#-m32
-#-std=gnu99
 
-# The LDFLAGS variable sets flags for linker
-LDFLAGS = -lm -lldl -lamd -L AMD/Lib/ -L LDL/Lib/
-#-lgsl -lgslcblas -m32
+LDFLAGS = -lm src/external/LDL/Lib/libldl.a src/external/AMD/Lib/libamd.a 
+
+HEADERS = src/osc.h src/cholesky.h src/run_osc.h
+SOURCES = $(HEADERS:.h=.c)
+OBJECTS = $(HEADERS:.h=.o) 
+TARGETS = box/run_osc finance/run_osc rob_est/run_osc sup_ch/run_osc
 
 ifeq ($(UNAME), Darwin)
 	CFLAGS   += -std=c99
@@ -31,56 +20,31 @@ else
 	CFLAGS   += -std=gnu99
 endif
 
-# install locations for packages: 
-CFLAGS += -I AMD/Include -I LDL/Include -I UFconfig/
+CFLAGS += -Isrc/external/AMD/Include -Isrc/external/LDL/Include -Isrc/external/SuiteSparse_config
 
-# In this section, you list the files that are part of the project.
-# If you add/change names of header/source files, here is where you
-# edit the Makefile.
-
-# used when make is invoked with no argument. Given the definitions
-# above, this Makefile file will build the one named TARGET and
-# assume that it depends on all the named OBJECTS files.
-
-default: clean copy_c_files packages examples
-
-copy_c_files :
-	cp osc.c box
-	cp osc.c finance
-	cp osc.c rob_est
-	cp osc.c sup_ch
-	cp warm_start.c box
-	cp warm_start.c finance
-	cp warm_start.c rob_est
-	cp warm_start.c sup_ch
+default: packages examples
 
 packages :
-	cd UFconfig && make
-	cd AMD && make
-	cd LDL && make
+	cd src/external/AMD && make
+	cd src/external/LDL && make
 
-examples :
-	cd box && make
-	cd finance && make
-	cd rob_est && make
-	cd sup_ch && make
+examples : box finance rob_est sup_ch
 
-# In make's default rules, a .o automatically depends on its .c file
-# (so editing the .c will cause recompilation into its .o file).
-# The line below creates additional dependencies, most notably that it
-# will cause the .c to reocmpiled if any included .h file changes.
+box : $(OBJECTS) box/src/prox.o
+	$(CC) $(CFLAGS) -o box/run_osc $^ $(LDFLAGS)
 
-# Phony means not a "real" target, it doesn't build anything
-# The phony target "clean" that is used to remove all compiled object files.
+finance : $(OBJECTS) finance/src/prox.o
+	$(CC) $(CFLAGS) -o finance/run_osc $^ $(LDFLAGS)
+
+rob_est : $(OBJECTS) rob_est/src/prox.o
+	$(CC) $(CFLAGS) -o rob_est/run_osc $^ $(LDFLAGS)
+
+sup_ch : $(OBJECTS) sup_ch/src/prox.o
+	$(CC) $(CFLAGS) -o sup_ch/run_osc $^ $(LDFLAGS)
 
 .PHONY: clean
 
 clean:
-	@rm -rf $(TARGETS) $(OBJECTS) core Makefile.dependencies *.o *.a
-	cd AMD && make purge
-	cd LDL && make purge
-	cd UFconfig && make purge
-	cd box && make clean
-	cd finance && make clean
-	cd rob_est && make clean
-	cd sup_ch && make clean
+	@rm -rf $(TARGETS) $(OBJECTS) core Makefile.dependencies *.o *.a box/*.o finance/*.o rob_est/*.o sup_ch/*.o
+	cd src/external/AMD && make purge
+	cd src/external/LDL && make purge

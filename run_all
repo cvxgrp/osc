@@ -1,0 +1,10 @@
+#!/bin/bash
+cd box
+./run_all
+cd ../finance
+./run_all
+cd ../rob_est
+./run_all
+cd ../sup_ch
+./run_all
+cd ..

@@ -12,8 +12,8 @@ test_on = 1;
 alpha = 1.8;
 % n - states, m - controls
 %n = 5; m = 2; T = 10; rho = 50; x_init = 5*randn(n,1);
-n = 20; m = 5; T = 20; rho = 50; x_init = 5*randn(n,1);
-%n = 50; m = 20; T = 30; rho = 50; x_init = 5*randn(n,1);
+%n = 20; m = 5; T = 20; rho = 50; x_init = 5*randn(n,1);
+n = 50; m = 20; T = 30; rho = 50; x_init = 5*randn(n,1);
 
 A = randn(n);
 A = A/max(abs(eig(A)));
